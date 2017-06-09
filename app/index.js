@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom'
 
 import {Header, Footer, ViewPort, HomeView, CountersView} from './components'
 
-import {AppStore} from './model/appstore.js'
+import {AppStore, _AppStore} from './model'
 
 import {div, h, input} from 'react-hyperscript-helpers'
 
@@ -13,7 +13,7 @@ import styles from './styles/main.styl'
 import skeleton from './styles/skeleton.css'
 import normalize from './styles/normalize.css'
 
-const appStore = new AppStore().init()
+const appStore = new _AppStore().init()
 
 const row = (children) =>
   typeof children == 'string' 
@@ -23,12 +23,12 @@ const row = (children) =>
 class Application extends React.Component ::
   constructor (props) ::
     super(props)
-    this.state = {place:'home', store:appStore}
+    this.state = {store:appStore}
 
   componentWillMount() ::
-    appStore.subscribe @ viewUpdate => ::
+    appStore.on @ "update", viewUpdate => ::
       console.log @: viewUpdate
-      this.setState @: store:viewUpdate, place:viewUpdate.location
+      this.setState @: store:viewUpdate
       this.appStoreLog = [].concat @ this.appStoreLog || [], [viewUpdate]
 
     window.timetravel = storeView => ::
@@ -46,29 +46,29 @@ class Application extends React.Component ::
     @{} home: () => HomeView
       , input_time: () => CountersView
 
-  showLoc () ::
-    return this.pages[this.state.place]()
+  getViewForLocation () ::
+    return this.pages[(this.state.store.location || "home")]()
 
   navButtons() ::
     return @[] 
         input @: type:"button"
               , className: "button-secondary"
               , value:"home"
-              , onClick:() => this.state.store.move("home")
+              , onClick:() => this.state.store.navigate("home")
 
         , input @: type:"button"
               , className: "button-secondary"
               , value:"input_time"
-              , onClick:() => this.state.store.move("input_time")
+              , onClick:() => this.state.store.navigate("input_time")
 
-  viewPort = (props) => ::
-    return h @ ViewPort, props
+  viewPort = () => ::
+    return h @ ViewPort, {component:this.getViewForLocation(), store:this.state.store}
 
   render() ::
     const header = row @ [ h(Header) ]
     const navbar = row @ this.navButtons()
     const footer = row @ [ h(Footer) ]
-    const body = this.viewPort @ {component:this.showLoc(), store:this.state.store}
+    const body = this.viewPort()
     console.log @: body
 
     
@@ -77,6 +77,7 @@ class Application extends React.Component ::
       , navbar 
       , body
       , footer
+
 
 
 
