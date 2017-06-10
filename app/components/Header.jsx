@@ -8,5 +8,5 @@ export class Header extends React.Component ::
 
   render() ::
     return div @ {className:"row text-center"}, 
-      @[] h1 @ "RECIPES"
+      @[] h1 @ "TimeKeeper"
 

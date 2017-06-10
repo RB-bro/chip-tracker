@@ -26,18 +26,20 @@ export class AppStore extends ObjectFunctional ::
       : this.setLocation @ this.locations[0]
     return this
 
+
 export class _AppStore extends EventEmitter ::
   setLocation(opts) ::
-    this.location = opts.navTo
-    this.update @ this
+    const view = Object.create @ this
+    view.location = opts.navTo
+    this.update @ view
 
 
   update(obj) ::
-    this.emit @ "update", obj
+    this.emit @ "update", Object.create @ obj
 
   navigate(loc) ::
     this.emit @ "navigate", {navTo:loc}
 
   init() ::
     this.on @ "navigate", this.setLocation
-    return this
+    return Object.freeze @ this

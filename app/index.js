@@ -1,11 +1,12 @@
-import React from 'react'
+import React, {PureComponent} from 'react'
 import ReactDOM from 'react-dom'
 
-import {Header, Footer, ViewPort, HomeView, CountersView} from './components'
+import {Header, Footer, ViewPort, Timeslot, Admin} from './components'
 
 import {AppStore, _AppStore} from './model'
 
-import {div, h, input} from 'react-hyperscript-helpers'
+
+const {div, h, row, input} = require @ './helpers'
 
 // CSS IMPORTS
 
@@ -15,12 +16,7 @@ import normalize from './styles/normalize.css'
 
 const appStore = new _AppStore().init()
 
-const row = (children) =>
-  typeof children == 'string' 
-    ?  div @ {className:"row"}, [children]
-    :  div @ {className:"row"}, children
-
-class Application extends React.Component ::
+class Application extends PureComponent ::
   constructor (props) ::
     super(props)
     this.state = {store:appStore}
@@ -43,8 +39,8 @@ class Application extends React.Component ::
 
     
   pages = 
-    @{} home: () => HomeView
-      , input_time: () => CountersView
+    @{} home: () => Admin
+      , input_time: () => Timeslot
 
   getViewForLocation () ::
     return this.pages[(this.state.store.location || "home")]()
