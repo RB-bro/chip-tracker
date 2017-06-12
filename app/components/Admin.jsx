@@ -6,8 +6,6 @@ export class Admin extends PureComponent ::
     constructor(props) ::
       super(props)
 
-
-
     render() ::
       const {timeslots} = this.props.tip
       const times = timeslots.map @ (item, idx) => li @ {key:idx}, `type : ${item.timeSlotType} user: ${item.user} time: ${item.ts.toLocaleString()}`
