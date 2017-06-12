@@ -44,7 +44,7 @@ class Application extends PureComponent ::
       , input_time: Timeslot
 
   getViewForLocation () ::
-    return this.pages[this.state.store.location || "home"]
+    return this.pages[this.state.store.location]
 
   navButtons() ::
     return @[] 

@@ -2,40 +2,21 @@ global.Observable = require("zen-observable")
 const {ObjectFunctional} = require("object-functional")
 const {EventEmitter} = require("events")
 
-export class AppStore extends ObjectFunctional ::
-  asAction = this.init
-  init() ::
-    this.locations = ['home', 'input_time']
-    this.setLocation @ this.locations[0]
-    return this
-
-  setLocation(loc) ::
-    this.location = loc
-    
-
-  asAction = this.restoreToState
-  restoreToState(view) ::
-    Object.assign @ this, view
-    this.ts_restored = Date.now()
-    return this
-    
-  asAction = this.move
-  move(location) ::
-    -1 !== this.locations.indexOf(location)
-      ? this.setLocation @ this.locations[this.locations.indexOf(location)]
-      : this.setLocation @ this.locations[0]
-    return this
-
-
 const create = obj => Object.create @ obj
-export class _AppStore extends EventEmitter ::
+export class AppStore extends EventEmitter ::
 
   setLocation(opts) ::
     this.viewObj.location = opts.navTo
     this.update @ this.viewObj
 
   incCount(opts) ::
-    this.viewObj.count = this.viewObj.count + opts.count
+    const {count} = this.viewObj
+    this.viewObj.count = count + opts.count
+    this.update @ this.viewObj
+
+  submit_time(opts) ::
+    const {timeslots} = this.viewObj
+    this.viewObj.timeslots = [...timeslots, opts.submission]
     this.update @ this.viewObj
 
 
@@ -44,6 +25,9 @@ export class _AppStore extends EventEmitter ::
 
   navigate(loc) ::
     this.emit @ "navigate", {navTo:loc}
+
+  submitTime(obj) ::
+    this.emit @ "submit_time", {submission:obj}
 
   add(num) ::
     this.emit @ "inc_count", {count: num}
@@ -55,10 +39,13 @@ export class _AppStore extends EventEmitter ::
     const viewObj = Object.create @ obj
     viewObj.count = 0
     viewObj.location = "home"
+    viewObj.timeslots = []
     return viewObj
 
   init() ::
     this.on @ "navigate", this.setLocation
     this.on @ "inc_count", this.incCount
+    this.on @ "submit_time", this.submit_time
+
     this.viewObj = this.getViewObj @ this
     return Object.freeze @ this

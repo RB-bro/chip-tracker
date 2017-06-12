@@ -9,14 +9,12 @@ export class Admin extends PureComponent ::
 
 
     render() ::
-      console.log @ this.state.store.viewObj
+      const {timeslots} = this.state.store.viewObj
+      const times = timeslots.map @ (item, idx) => div @ {key:idx}, `::  type ${item.timeSlotType}`
       return div @ {className:"container"},  @[]
           row @ @[]
-              div @ {className:"two columns"}, "this" 
-            , div @ {className:"two columns"}, "is"
-            , div @ {className:"two columns"}, @[]
-                input @ {type:"button", onClick:() => this.state.store.addOne(), className:"button-secondary", value:"inc"}
-            , div @ {className:"two columns"}, `COUNT: ${this.state.store.count}`
-            , div @ {className:"two columns"}, "page"
+            div @ {className:"eight columns"}, "TIMESLOTS:" 
+        , row @ @[]
+            div @ {className:"eight columns"}, times
              
 
