@@ -1,23 +1,25 @@
-global.Observable = require("zen-observable")
-const {ObjectFunctional} = require("object-functional")
-const {EventEmitter} = require("events")
+import {BrandonsFunctionalStore} from './basestore'
 
-export class AppStore extends EventEmitter ::
+export class AppStore extends BrandonsFunctionalStore ::
 
   setLocation(opts) ::
-    return this.tip = asViewObj @ this.tip, @{}
+    return this.assignToTip @:
       location:opts.navTo
 
   incCount(opts) ::
-    const count = this.tip.count 
-    return this.tip = asViewObj @ this.tip, @{}
-      count:count + opts.count 
+    return this.assignToTip @:
+      count: this.tip.count + opts.count 
 
   submitTime(opts) ::
-    const timeslots = this.tip.timeslots
-    return this.tip = asViewObj @ this.tip, @{}
-      timeslots: [...timeslots, opts.submission]
+    return this.timeStore.submitTime(opts)
+  get timeslots() ::
+    return this.timeStore.timeslots
 
+  restoreToState(viewObj) ::
+    super.restoreToState(viewObj)
+    const timeStore = viewObj.timeStore
+    if null != timeStore ::
+      timeStore.restoreToState(timeStore)
 
   navigate(loc) ::
     this.setLocation @ {navTo:loc}
@@ -25,34 +27,22 @@ export class AppStore extends EventEmitter ::
   add(num) ::
     this.incCount @ {count: num}
 
-  restoreToState (viewObj) ::
-    this.tip = viewObj
+  static create() ::
+    const timeStore = TimeStore.create()
+    const root = super.create @:
+      count: 0, location: "home", timeStore
 
-  set tip(aTip) ::
-    const root = this._root_
-    if root._tip === aTip :: return
-    root._tip = aTip
-    root.emit @ "update", aTip
-    return aTip
-
-  get tip() ::
-    const root = this._root_
-    return root._tip
-
-  init() ::
-    Object.defineProperty @ this, "_root_", {value:this}
-    this.tip = asViewObj @ this, @{}
-        count:0
-      , location: "home"
-      , timeslots: []
-
-    return this.tip
+    timeStore.on @ 'update', timeStore => ::
+      if timeStore !== root.timeStore ::
+        root.assignToTip @: timeStore
+    return root
 
 
-function asViewObj(obj, ...args) ::
-    const viewObj = Object.create @ obj._root_ || obj
-    Object.assign @ viewObj, obj, ...args
-    return Object.freeze @ viewObj
+export class TimeStore extends BrandonsFunctionalStore ::
+  submitTime(opts) ::
+    const timeslots = this.tip.timeslots.concat @ [opts.submission]
+    return this.assignToTip @: timeslots
 
-
+  static create() ::
+    return super.create @: timeslots: []
 

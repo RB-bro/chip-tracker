@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom'
 
 import {Header, Footer, ViewPort, Timeslot, Admin, NavigationBar, CounterView} from './components'
 
+import {timeTravelingMachine} from './model'
 import {AppStore} from './model'
 
 
@@ -14,54 +15,44 @@ import styles from './styles/main.styl'
 import skeleton from './styles/skeleton.css'
 import normalize from './styles/normalize.css'
 
-const appStore = new AppStore().init()
-console.log @: appStore
 
 class Application extends PureComponent ::
-  constructor (props) ::
-    super(props)
-    this.state = {store:appStore}
-
-  componentWillMount() ::
-    appStore.on @ "update", viewUpdate => ::
-      console.log @: viewUpdate
-      this.setState @: store:viewUpdate
-      this.appStoreLog = [].concat @ this.appStoreLog || [], [viewUpdate]
-
-    window.timetravel = storeView => ::
-      if undefined === storeView ::
-        return this.appStoreLog
-      if 'number' === typeof storeView ::
-        let idx = storeView
-        storeView = this.appStoreLog[idx]
-        this.appStoreLog = this.appStoreLog.slice(0, idx)
-
-      return storeView.restoreToState @ storeView
-
-    
   pages = 
     @{} home: Admin
       , input_time: Timeslot
       , counter: CounterView
 
   getViewForLocation () ::
-    return this.pages[this.state.store.location || "home"]
+    return this.pages[this.props.tip.location || "home"]
 
 
   viewPort = () => ::
-    return h @ ViewPort, {component:this.getViewForLocation(), tip:this.state.store.tip}
+    return h @ ViewPort, {component:this.getViewForLocation(), tip:this.props.tip}
 
   render() ::
     const header = row @ [ h(Header) ]
-    const navbar = row @ [ h(NavigationBar, {tip:this.state.store.tip}) ]
+    const navbar = row @ [ h(NavigationBar, {tip:this.props.tip}) ]
     const footer = row @ [ h(Footer) ]
     const body = this.viewPort()
 
-    
     return div @ {className:"container"}, @[]
         header
       , navbar 
       , body
       , footer
 
-ReactDOM.render @ h(Application), document.getElementById @ "app"
+
+::
+  const rootElem = document.getElementById @ "app"
+  function renderRoot(tip) ::
+    const root = h @ Application, {tip}
+    ReactDOM.render @ root, rootElem
+
+  const appStore = AppStore.create()
+  console.log @: appStore
+  window.app_timetravel = timeTravelingMachine(appStore)
+  window.timelog_timetravel = timeTravelingMachine(appStore.timeStore)
+
+  appStore.on @ "update", renderRoot
+  renderRoot(appStore.tip)
+
