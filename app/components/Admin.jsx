@@ -7,8 +7,9 @@ export class Admin extends PureComponent ::
       super(props)
 
 
+
     render() ::
-      const {timeslots} = this.props.store.viewObj
+      const {timeslots} = this.props.tip
       const times = timeslots.map @ (item, idx) => li @ {key:idx}, `type : ${item.timeSlotType} user: ${item.user} time: ${item.ts.toLocaleString()}`
       return div @ {className:"view-item"},  @[]
           row @ @[]

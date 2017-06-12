@@ -5,49 +5,54 @@ const {EventEmitter} = require("events")
 export class AppStore extends EventEmitter ::
 
   setLocation(opts) ::
-    this.viewObj.location = opts.navTo
-    this.update @ this.viewObj
+    return this.tip = asViewObj @ this.tip, @{}
+      location:opts.navTo
 
   incCount(opts) ::
-    const {count} = this.viewObj
-    this.viewObj.count = count + opts.count
-    this.update @ this.viewObj
+    const count = this.tip.count 
+    return this.tip = asViewObj @ this.tip, @{}
+      count:count + opts.count 
 
   submitTime(opts) ::
-    const {timeslots} = this.viewObj
-    this.viewObj.timeslots = [...timeslots, opts.submission]
-    this.update @ this.viewObj
+    const timeslots = this.tip.timeslots
+    return this.tip = asViewObj @ this.tip, @{}
+      timeslots: [...timeslots, opts.submission]
 
-
-  update(obj) ::
-    this.emit @ "update", Object.freeze @ Object.create @ obj
 
   navigate(loc) ::
-    this.emit @ "navigate", {navTo:loc}
-
-  submit_time(obj) ::
-    this.emit @ "submit_time", {submission:obj}
+    this.setLocation @ {navTo:loc}
 
   add(num) ::
-    this.emit @ "inc_count", {count: num}
+    this.incCount @ {count: num}
 
-  addOne() ::
-    this.add @ 1
+  restoreToState (viewObj) ::
+    this.tip = viewObj
 
-  subtractOne() ::
-    this.add @ -1
+  set tip(aTip) ::
+    const root = this._root_
+    if root._tip === aTip :: return
+    root._tip = aTip
+    root.emit @ "update", aTip
+    return aTip
 
-  getViewObj(obj) ::
-    const viewObj = Object.create @ obj
-    viewObj.count = 0
-    viewObj.location = "home"
-    viewObj.timeslots = []
-    return viewObj
+  get tip() ::
+    const root = this._root_
+    return root._tip
 
   init() ::
-    this.on @ "navigate", this.setLocation
-    this.on @ "inc_count", this.incCount
-    this.on @ "submit_time", this.submitTime
+    Object.defineProperty @ this, "_root_", {value:this}
+    this.tip = asViewObj @ this, @{}
+        count:0
+      , location: "home"
+      , timeslots: []
 
-    this.viewObj = this.getViewObj @ this
-    return Object.freeze @ this
+    return this.tip
+
+
+function asViewObj(obj, ...args) ::
+    const viewObj = Object.create @ obj._root_ || obj
+    Object.assign @ viewObj, obj, ...args
+    return Object.freeze @ viewObj
+
+
+

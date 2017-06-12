@@ -12,7 +12,7 @@ export class NavigationBar extends PureComponent ::
       input @: type:"button"
         , className: "button-secondary nav-bar-btn"
         , value:loc
-        , onClick:() => this.props.store.navigate(loc)
+        , onClick:() => this.props.tip.navigate(loc)
 
   render() ::
     return div @ {className:"nav-bar"}, this._locations.map @ this.navButton()

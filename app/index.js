@@ -49,11 +49,11 @@ class Application extends PureComponent ::
 
 
   viewPort = () => ::
-    return h @ ViewPort, {component:this.getViewForLocation(), store:this.state.store}
+    return h @ ViewPort, {component:this.getViewForLocation(), tip:this.state.store.tip}
 
   render() ::
     const header = row @ [ h(Header) ]
-    const navbar = row @ [ h(NavigationBar, {store:this.state.store}) ]
+    const navbar = row @ [ h(NavigationBar, {tip:this.state.store.tip}) ]
     const footer = row @ [ h(Footer) ]
     const body = this.viewPort()
 

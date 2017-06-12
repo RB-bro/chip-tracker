@@ -7,9 +7,10 @@ export class CounterView extends PureComponent ::
     super(props)
 
   renderStateChangeButton() ::
+    const tip = this.props.tip
     return (item, idx) => input @ @{}
           type:"button"
-        , onClick:() => item.store.add(item.num)
+        , onClick:() => tip.add(item.num)
         , className: "button-secondary"
         , value: item.name 
         , key: idx+1
@@ -17,8 +18,8 @@ export class CounterView extends PureComponent ::
   render() ::
     /* for some reason I have to pass the store whole I think */
     
-    const buttons = [{name:"inc", store:this.props.store, num:1}
-                  ,  {name:"dec", store:this.props.store, num:-1}]
+    const buttons = [{name:"inc", num:1}
+                  ,  {name:"dec", num:-1}]
                   .map @ this.renderStateChangeButton()
     /*
     const buttons = [{name:"inc", onClick:this.props.store.addOne}
@@ -26,7 +27,7 @@ export class CounterView extends PureComponent ::
                   .map @ this.renderStateChangeButton()
    */
 
-    const {count} = this.props.store.viewObj
+    const {count} = this.props.tip
     return div @ {className:"view-item"},  @[]
         row @ @[]
           h1 @ {className:"eight columns"}, `::CURRENT COUNT::[${count}]`

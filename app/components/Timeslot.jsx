@@ -17,8 +17,8 @@ export class Timeslot extends PureComponent ::
   renderTimeButton() ::
     return (item, idx) => input @ @{}
           type:"button"
-        , onClick:() => this.props.store.submit_time @ 
-          {user:"fake", ts:new Date(), timeSlotType:item.name}
+        , onClick:() => this.props.tip.submitTime @ 
+          {submission:{user:"fake", ts:new Date(), timeSlotType:item.name}}
         , className:"button-secondary"
         , value:item.name 
         , key:idx+1
@@ -31,8 +31,5 @@ export class Timeslot extends PureComponent ::
 
 
 
-// does it de reference if i do
-// const {submit_time} = this.state.store
 
  //ask shane about how to use Date.now to get current time
-//

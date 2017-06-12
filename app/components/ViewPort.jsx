@@ -3,12 +3,5 @@ import React, {Component} from "react"
 import {div, h} from '../helpers'
 
 
-export class ViewPort extends Component ::
-  constructor (props) ::
-    super(props)
-    this.state = {store:this.props.store}
- 
-  render() ::
-    const component = this.props.component
-      , properties = {store:this.props.store}
-    return div @ {className:"row viewport"}, [h(component, properties)]
+export const ViewPort = props =>
+  div @ {className:"row viewport"}, [h(props.component, {tip:props.tip})]
