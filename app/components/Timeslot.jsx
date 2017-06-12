@@ -13,22 +13,26 @@ const TIMESLOTS = @[]
 export class Timeslot extends PureComponent ::
   constructor(props) ::
     super(props)
-    this.state = {store:this.props.store}
 
   renderTimeButton() ::
     return (item, idx) => input @ @{}
           type:"button"
-        , onClick:() => this.state.store.submitTime @ 
-          {user:"fake", ts:Date.now(), timeSlotType:item.name}
+        , onClick:() => this.props.store.submit_time @ 
+          {user:"fake", ts:new Date(), timeSlotType:item.name}
         , className:"button-secondary"
         , value:item.name 
         , key:idx+1
 
+
   render() ::
     const timeinputs = TIMESLOTS.map @ this.renderTimeButton()
-    return div @ {className:"container"}, @[]
-        div @ {className:"three columns"}, "this is"
-     ,  div @ {className:"three columns"}, "the"
-     ,  div @ {className:"three columns"}, "timeslot"
-     ,  div @ {className:"three columns"}, "pane"
-     ,  div @ {className:"row"}, @[] timeinputs
+    return div @ {className:"view-item"}, @[]
+        div @ {className:"row"}, @[] timeinputs
+
+
+
+// does it de reference if i do
+// const {submit_time} = this.state.store
+
+ //ask shane about how to use Date.now to get current time
+//

@@ -1,7 +1,7 @@
 import React, {PureComponent} from 'react'
 import ReactDOM from 'react-dom'
 
-import {Header, Footer, ViewPort, Timeslot, Admin} from './components'
+import {Header, Footer, ViewPort, Timeslot, Admin, NavigationBar, CounterView} from './components'
 
 import {AppStore} from './model'
 
@@ -42,28 +42,18 @@ class Application extends PureComponent ::
   pages = 
     @{} home: Admin
       , input_time: Timeslot
+      , counter: CounterView
 
   getViewForLocation () ::
     return this.pages[this.state.store.location || "home"]
 
-  navButtons() ::
-    return @[] 
-        input @: type:"button"
-              , className: "button-secondary"
-              , value:"home"
-              , onClick:() => this.state.store.navigate("home")
-
-        , input @: type:"button"
-              , className: "button-secondary"
-              , value:"input_time"
-              , onClick:() => this.state.store.navigate("input_time")
 
   viewPort = () => ::
     return h @ ViewPort, {component:this.getViewForLocation(), store:this.state.store}
 
   render() ::
     const header = row @ [ h(Header) ]
-    const navbar = row @ this.navButtons()
+    const navbar = row @ [ h(NavigationBar, {store:this.state.store}) ]
     const footer = row @ [ h(Footer) ]
     const body = this.viewPort()
 
@@ -73,8 +63,5 @@ class Application extends PureComponent ::
       , navbar 
       , body
       , footer
-
-
-
 
 ReactDOM.render @ h(Application), document.getElementById @ "app"

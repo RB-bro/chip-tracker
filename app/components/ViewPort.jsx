@@ -9,6 +9,6 @@ export class ViewPort extends Component ::
     this.state = {store:this.props.store}
  
   render() ::
-    let component = this.props.component
-      , properties = {store:this.state.store}
+    const component = this.props.component
+      , properties = {store:this.props.store}
     return div @ {className:"row viewport"}, [h(component, properties)]

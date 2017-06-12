@@ -2,7 +2,6 @@ global.Observable = require("zen-observable")
 const {ObjectFunctional} = require("object-functional")
 const {EventEmitter} = require("events")
 
-const create = obj => Object.create @ obj
 export class AppStore extends EventEmitter ::
 
   setLocation(opts) ::
@@ -14,19 +13,19 @@ export class AppStore extends EventEmitter ::
     this.viewObj.count = count + opts.count
     this.update @ this.viewObj
 
-  submit_time(opts) ::
+  submitTime(opts) ::
     const {timeslots} = this.viewObj
     this.viewObj.timeslots = [...timeslots, opts.submission]
     this.update @ this.viewObj
 
 
   update(obj) ::
-    this.emit @ "update", Object.freeze @ create @ obj
+    this.emit @ "update", Object.freeze @ Object.create @ obj
 
   navigate(loc) ::
     this.emit @ "navigate", {navTo:loc}
 
-  submitTime(obj) ::
+  submit_time(obj) ::
     this.emit @ "submit_time", {submission:obj}
 
   add(num) ::
@@ -34,6 +33,9 @@ export class AppStore extends EventEmitter ::
 
   addOne() ::
     this.add @ 1
+
+  subtractOne() ::
+    this.add @ -1
 
   getViewObj(obj) ::
     const viewObj = Object.create @ obj
@@ -45,7 +47,7 @@ export class AppStore extends EventEmitter ::
   init() ::
     this.on @ "navigate", this.setLocation
     this.on @ "inc_count", this.incCount
-    this.on @ "submit_time", this.submit_time
+    this.on @ "submit_time", this.submitTime
 
     this.viewObj = this.getViewObj @ this
     return Object.freeze @ this

@@ -4,3 +4,5 @@ Object.assign @ exports
   , require('./ViewPort.jsx')
   , require('./Admin.jsx')
   , require('./Timeslot.jsx')
+  , require('./NavBar.jsx')
+  , require('./Counter.jsx')
