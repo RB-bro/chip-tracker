@@ -27,19 +27,38 @@ export class AppStore extends ObjectFunctional ::
     return this
 
 
+const create = obj => Object.create @ obj
 export class _AppStore extends EventEmitter ::
+
   setLocation(opts) ::
-    const view = Object.create @ this
-    view.location = opts.navTo
-    this.update @ view
+    this.viewObj.location = opts.navTo
+    this.update @ this.viewObj
+
+  incCount(opts) ::
+    this.viewObj.count = this.viewObj.count + opts.count
+    this.update @ this.viewObj
 
 
   update(obj) ::
-    this.emit @ "update", Object.create @ obj
+    this.emit @ "update", Object.freeze @ create @ obj
 
   navigate(loc) ::
     this.emit @ "navigate", {navTo:loc}
 
+  add(num) ::
+    this.emit @ "inc_count", {count: num}
+
+  addOne() ::
+    this.add @ 1
+
+  getViewObj(obj) ::
+    const viewObj = Object.create @ obj
+    viewObj.count = 0
+    viewObj.location = "home"
+    return viewObj
+
   init() ::
     this.on @ "navigate", this.setLocation
+    this.on @ "inc_count", this.incCount
+    this.viewObj = this.getViewObj @ this
     return Object.freeze @ this

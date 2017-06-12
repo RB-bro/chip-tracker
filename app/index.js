@@ -15,6 +15,7 @@ import skeleton from './styles/skeleton.css'
 import normalize from './styles/normalize.css'
 
 const appStore = new _AppStore().init()
+console.log @: appStore
 
 class Application extends PureComponent ::
   constructor (props) ::
@@ -58,7 +59,7 @@ class Application extends PureComponent ::
               , onClick:() => this.state.store.navigate("input_time")
 
   viewPort = () => ::
-    return h @ ViewPort, {component:this.getViewForLocation(), store:this.state.store}
+    return h @ ViewPort, {component:this.getViewForLocation(), store:this.state.store.viewObj}
 
   render() ::
     const header = row @ [ h(Header) ]
