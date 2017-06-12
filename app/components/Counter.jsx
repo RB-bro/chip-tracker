@@ -2,12 +2,10 @@
 import React, {PureComponent} from "react"
 import {div, h, h1, button, row, input} from '../helpers'
 
-export class CounterView extends PureComponent ::
-  constructor(props) ::
-    super(props)
+export const CounterView = props => ::
 
-  renderStateChangeButton() ::
-    const tip = this.props.tip
+  function renderStateChangeButton() ::
+    const tip = props.tip
     return (item, idx) => input @ @{}
           type:"button"
         , onClick:() => tip.add(item.num)
@@ -15,21 +13,13 @@ export class CounterView extends PureComponent ::
         , value: item.name 
         , key: idx+1
 
-  render() ::
-    /* for some reason I have to pass the store whole I think */
     
-    const buttons = [{name:"inc", num:1}
-                  ,  {name:"dec", num:-1}]
-                  .map @ this.renderStateChangeButton()
-    /*
-    const buttons = [{name:"inc", onClick:this.props.store.addOne}
-                  ,  {name:"dec", onClick:this.props.store.deleteOne}]
-                  .map @ this.renderStateChangeButton()
-   */
+  const buttonData = @[] {name:"inc", num:1} , {name:"dec", num:-1}
+  const buttons = buttonData.map @ renderStateChangeButton()
+  const {count} = props.tip
 
-    const {count} = this.props.tip
-    return div @ {className:"view-item"},  @[]
-        row @ @[]
-          h1 @ {className:"eight columns"}, `::CURRENT COUNT::[${count}]`
-      , row @ @[] 
-          buttons
+  return div @ {className:"view-item"},  @[]
+      row @ @[]
+        h1 @ {className:"eight columns"}, `::CURRENT COUNT::[${count}]`
+    , row @ @[] 
+        buttons

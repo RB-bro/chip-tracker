@@ -16,6 +16,9 @@ import skeleton from './styles/skeleton.css'
 import normalize from './styles/normalize.css'
 
 
+// change all child components to pure functional
+// implement navigation store
+
 class Application extends PureComponent ::
   pages = 
     @{} home: Admin
