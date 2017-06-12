@@ -8,9 +8,6 @@ export class ViewPort extends Component ::
     super(props)
     this.state = {store:this.props.store}
  
-  componentWillMount() ::
-    this.props.store.on @ "update", newView => ::
-      this.setState @ {store:newView}
   render() ::
     let component = this.props.component
       , properties = {store:this.state.store}
