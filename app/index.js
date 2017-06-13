@@ -26,7 +26,9 @@ class Application extends PureComponent ::
       , counter: CounterView
 
   getViewForLocation () ::
-    return this.pages[this.props.tip.location || "home"]
+    console.log @: properties: this.props.tip
+
+    return this.pages[this.props.tip.navStore.location]
 
 
   viewPort = () => ::
